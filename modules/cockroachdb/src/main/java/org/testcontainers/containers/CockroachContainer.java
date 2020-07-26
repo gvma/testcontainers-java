@@ -27,16 +27,14 @@ public class CockroachContainer extends JdbcDatabaseContainer<CockroachContainer
         this(IMAGE + ":" + IMAGE_TAG);
     }
 
-    /**
-     * @deprecated use {@link CockroachContainer(DockerImageName)} instead
-     */
-    @Deprecated
     public CockroachContainer(final String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public CockroachContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
 
         withExposedPorts(REST_API_PORT, DB_PORT);
         waitingFor(

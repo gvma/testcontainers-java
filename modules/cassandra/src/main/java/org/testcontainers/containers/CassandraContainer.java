@@ -25,7 +25,6 @@ import java.util.Optional;
  */
 public class CassandraContainer<SELF extends CassandraContainer<SELF>> extends GenericContainer<SELF> {
 
-    @Deprecated
     public static final String IMAGE = "cassandra";
 
     public static final Integer CQL_PORT = 9042;
@@ -40,21 +39,19 @@ public class CassandraContainer<SELF extends CassandraContainer<SELF>> extends G
     /**
      * @deprecated use {@link #CassandraContainer(DockerImageName)} instead
      */
-    @Deprecated
     public CassandraContainer() {
         this("cassandra:3.11.2");
     }
 
-    /**
-     * @deprecated use {@link #CassandraContainer(DockerImageName)} instead
-     */
-    @Deprecated
     public CassandraContainer(String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public CassandraContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
+
         addExposedPort(CQL_PORT);
         setStartupAttempts(3);
         this.enableJmxReporting = false;

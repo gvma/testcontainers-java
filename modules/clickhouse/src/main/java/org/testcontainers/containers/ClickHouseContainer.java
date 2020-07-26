@@ -30,16 +30,14 @@ public class ClickHouseContainer extends JdbcDatabaseContainer {
         super(IMAGE + ":" + DEFAULT_TAG);
     }
 
-    /**
-     * @deprecated use {@link ClickHouseContainer(DockerImageName)} instead
-     */
-    @Deprecated
     public ClickHouseContainer(String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public ClickHouseContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
 
         withExposedPorts(HTTP_PORT, NATIVE_PORT);
         waitingFor(

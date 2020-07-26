@@ -28,16 +28,15 @@ public class Db2Container extends JdbcDatabaseContainer<Db2Container> {
         this(DEFAULT_DB2_IMAGE_NAME + ":" + DEFAULT_TAG);
     }
 
-    /**
-     * @deprecated use {@link Db2Container(DockerImageName)} instead
-     */
-    @Deprecated
     public Db2Container(String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public Db2Container(final DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DockerImageName.parse(DEFAULT_DB2_IMAGE_NAME));
+
         withPrivilegedMode(true);
         this.waitStrategy = new LogMessageWaitStrategy()
                 .withRegEx(".*Setup has completed\\..*")

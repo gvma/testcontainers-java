@@ -49,6 +49,8 @@ public class KafkaContainer extends GenericContainer<KafkaContainer> {
     public KafkaContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
+        dockerImageName.checkCompatibleWith(DockerImageName.parse("confluentinc/cp-kafka"));
+
         withExposedPorts(KAFKA_PORT);
 
         // Use two listeners with different names, it will force Kafka to communicate with itself via internal
