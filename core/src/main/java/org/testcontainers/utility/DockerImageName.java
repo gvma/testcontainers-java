@@ -53,8 +53,8 @@ public final class DockerImageName {
         String remoteName;
         if (slashIndex == -1 ||
             (!fullImageName.substring(0, slashIndex).contains(".") &&
-             !fullImageName.substring(0, slashIndex).contains(":") &&
-             !fullImageName.substring(0, slashIndex).equals("localhost"))) {
+                !fullImageName.substring(0, slashIndex).contains(":") &&
+                !fullImageName.substring(0, slashIndex).equals("localhost"))) {
             registry = "";
             remoteName = fullImageName;
         } else {
@@ -95,8 +95,8 @@ public final class DockerImageName {
         String remoteName;
         if (slashIndex == -1 ||
             (!nameWithoutTag.substring(0, slashIndex).contains(".") &&
-             !nameWithoutTag.substring(0, slashIndex).contains(":") &&
-             !nameWithoutTag.substring(0, slashIndex).equals("localhost"))) {
+                !nameWithoutTag.substring(0, slashIndex).contains(":") &&
+                !nameWithoutTag.substring(0, slashIndex).equals("localhost"))) {
             registry = "";
             remoteName = nameWithoutTag;
         } else {
@@ -219,15 +219,26 @@ public final class DockerImageName {
      * @return whether this image has declared compatibility.
      */
     public boolean isCompatibleWith(DockerImageName other) {
-        if (this.compatibleSubstituteFor != null) {
-            final boolean registrySame = other.registry.equals(this.compatibleSubstituteFor.registry);
-            final boolean repoSame = other.repo.equals(this.compatibleSubstituteFor.repo);
-            final boolean versioningNotSpecifiedOrSame = other.versioning == null || other.versioning.equals(this.compatibleSubstituteFor.versioning);
+        // is this image already the same?
+        final boolean thisRegistrySame = other.registry.equals(this.registry);
+        final boolean thisRepoSame = other.repo.equals(this.repo);
+        final boolean thisVersioningNotSpecifiedOrSame = other.versioning == null ||
+            other.versioning.equals(this.versioning);
 
-            return registrySame && repoSame && versioningNotSpecifiedOrSame;
-        } else {
+        if (thisRegistrySame && thisRepoSame && thisVersioningNotSpecifiedOrSame) {
+            return true;
+        }
+
+        if (this.compatibleSubstituteFor == null) {
             return false;
         }
+
+        final boolean compatibleRegistrySame = other.registry.equals(this.compatibleSubstituteFor.registry);
+        final boolean compatibleRepoSame = other.repo.equals(this.compatibleSubstituteFor.repo);
+        final boolean compatibleVersioningNotSpecifiedOrSame = other.versioning == null ||
+            other.versioning.equals(this.compatibleSubstituteFor.versioning);
+
+        return compatibleRegistrySame && compatibleRepoSame && compatibleVersioningNotSpecifiedOrSame;
     }
 
     /**
@@ -244,7 +255,7 @@ public final class DockerImageName {
                         "you are trying to use an image that Testcontainers has not been designed to use. If this is " +
                         "deliberate, and if you are confident that the image is compatible, you should declare " +
                         "compatibility in code using the `asCompatibleSubstituteFor` method. For example:\n" +
-                        "   DockerImageName myImage = DockerImageName.parse(\"%s\").asCompatibleSubstituteFor(%s);\n" +
+                        "   DockerImageName myImage = DockerImageName.parse(\"%s\").asCompatibleSubstituteFor(\"%s\");\n" +
                         "and then use `myImage` instead.",
                     this.rawName, other.rawName, this.rawName, other.rawName
                 )

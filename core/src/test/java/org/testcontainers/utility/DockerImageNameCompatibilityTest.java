@@ -22,11 +22,32 @@ public class DockerImageNameCompatibilityTest {
     }
 
     @Test
+    public void testImageWithAutomaticCompatibility() {
+        DockerImageName subject = DockerImageName.parse("foo:1.2.3");
+
+        assertTrue("correct compatibility claim", subject.isCompatibleWith(DockerImageName.parse("foo")));
+    }
+
+    @Test
+    public void testImageWithAutomaticCompatibilityForFullPath() {
+        DockerImageName subject = DockerImageName.parse("repo/foo:1.2.3");
+
+        assertTrue("correct compatibility claim", subject.isCompatibleWith(DockerImageName.parse("repo/foo")));
+    }
+
+    @Test
     public void testImageWithClaimedCompatibility() {
         DockerImageName subject = DockerImageName.parse("foo").asCompatibleSubstituteFor("bar");
 
         assertTrue("correct compatibility claim", subject.isCompatibleWith(DockerImageName.parse("bar")));
         assertFalse("compatibility claim against wrong name", subject.isCompatibleWith(DockerImageName.parse("fizz")));
+    }
+
+    @Test
+    public void testImageWithClaimedCompatibilityAndVersion() {
+        DockerImageName subject = DockerImageName.parse("foo:1.2.3").asCompatibleSubstituteFor("bar");
+
+        assertTrue("correct compatibility claim", subject.isCompatibleWith(DockerImageName.parse("bar")));
     }
 
     @Test
