@@ -6,7 +6,11 @@ import org.testcontainers.utility.DockerImageName;
 @Slf4j
 public class MockServerContainer extends GenericContainer<MockServerContainer> {
 
-    public static final String VERSION = "5.5.4";
+    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("jamesdbloom/mockserver");
+    private static final String DEFAULT_VERSION = "5.5.4";
+
+    @Deprecated
+    public static final String VERSION = DEFAULT_VERSION;
 
     public static final int PORT = 1080;
 
@@ -15,7 +19,7 @@ public class MockServerContainer extends GenericContainer<MockServerContainer> {
      */
     @Deprecated
     public MockServerContainer() {
-        this(VERSION);
+        this(DOCKER_IMAGE_NAME.withTag("mockserver-" + DEFAULT_VERSION));
     }
 
     /**
@@ -23,11 +27,14 @@ public class MockServerContainer extends GenericContainer<MockServerContainer> {
      */
     @Deprecated
     public MockServerContainer(String version) {
-        this(DockerImageName.parse("jamesdbloom/mockserver:mockserver-" + version));
+        this(DOCKER_IMAGE_NAME.withTag("mockserver-" + version));
     }
 
     public MockServerContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+
         withCommand("-logLevel INFO -serverPort " + PORT);
         addExposedPorts(PORT);
     }

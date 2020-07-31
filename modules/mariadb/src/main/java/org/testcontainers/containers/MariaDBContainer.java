@@ -9,9 +9,16 @@ import org.testcontainers.utility.DockerImageName;
  */
 public class MariaDBContainer<SELF extends MariaDBContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
 
+    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mariadb");
+    private static final String DEFAULT_VERSION = "10.3.6";
+
     public static final String NAME = "mariadb";
-    public static final String IMAGE = "mariadb";
-    public static final String DEFAULT_TAG = "10.3.6";
+
+    @Deprecated
+    public static final String IMAGE = DOCKER_IMAGE_NAME.getUnversionedPart();
+
+    @Deprecated
+    public static final String DEFAULT_TAG = DEFAULT_VERSION;
 
     static final String DEFAULT_USER = "test";
 
@@ -29,19 +36,18 @@ public class MariaDBContainer<SELF extends MariaDBContainer<SELF>> extends JdbcD
      */
     @Deprecated
     public MariaDBContainer() {
-        this(IMAGE + ":" + DEFAULT_TAG);
+        this(DOCKER_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
-    /**
-     * @deprecated use {@link MariaDBContainer(DockerImageName)} instead
-     */
-    @Deprecated
     public MariaDBContainer(String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public MariaDBContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+
         addExposedPort(MARIADB_PORT);
     }
 

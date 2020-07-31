@@ -11,9 +11,16 @@ import java.util.stream.Stream;
  */
 public class MSSQLServerContainer<SELF extends MSSQLServerContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
 
+    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server");
+    private static final String DEFAULT_VERSION = "2017-CU12";
+
     public static final String NAME = "sqlserver";
-    public static final String IMAGE = "mcr.microsoft.com/mssql/server";
-    public static final String DEFAULT_TAG = "2017-CU12";
+
+    @Deprecated
+    public static final String IMAGE = DOCKER_IMAGE_NAME.getUnversionedPart();
+
+    @Deprecated
+    public static final String DEFAULT_TAG = DEFAULT_VERSION;
 
     public static final Integer MS_SQL_SERVER_PORT = 1433;
 
@@ -38,19 +45,18 @@ public class MSSQLServerContainer<SELF extends MSSQLServerContainer<SELF>> exten
      */
     @Deprecated
     public MSSQLServerContainer() {
-        this(IMAGE + ":" + DEFAULT_TAG);
+        this(DOCKER_IMAGE_NAME.withTag(DEFAULT_VERSION));
     }
 
-    /**
-     * @deprecated use {@link MSSQLServerContainer(DockerImageName)} instead
-     */
-    @Deprecated
     public MSSQLServerContainer(final String dockerImageName) {
         this(DockerImageName.parse(dockerImageName));
     }
 
     public MSSQLServerContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
+
+        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+
         withStartupTimeoutSeconds(DEFAULT_STARTUP_TIMEOUT_SECONDS);
         withConnectTimeoutSeconds(DEFAULT_CONNECT_TIMEOUT_SECONDS);
         addExposedPort(MS_SQL_SERVER_PORT);
