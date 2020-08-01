@@ -2,7 +2,6 @@ package org.testcontainers.utility;
 
 
 import com.google.common.net.HostAndPort;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +13,7 @@ public final class DockerImageName {
 
     /* Regex patterns used for validation */
     private static final String ALPHA_NUMERIC = "[a-z0-9]+";
-    private static final String SEPARATOR = "([.]{1}|_{1,2}|-+)";
+    private static final String SEPARATOR = "([.]|_{1,2}|-+)";
     private static final String REPO_NAME_PART = ALPHA_NUMERIC + "(" + SEPARATOR + ALPHA_NUMERIC + ")*";
     private static final Pattern REPO_NAME = Pattern.compile(REPO_NAME_PART + "(/" + REPO_NAME_PART + ")*");
 
@@ -63,13 +62,13 @@ public final class DockerImageName {
 
         if (remoteName.contains("@sha256:")) {
             repo = remoteName.split("@sha256:")[0];
-            versioning = new Sha256Versioning(remoteName.split("@sha256:")[1]);
+            versioning = new Versioning.Sha256Versioning(remoteName.split("@sha256:")[1]);
         } else if (remoteName.contains(":")) {
             repo = remoteName.split(":")[0];
-            versioning = new TagVersioning(remoteName.split(":")[1]);
+            versioning = new Versioning.TagVersioning(remoteName.split(":")[1]);
         } else {
             repo = remoteName;
-            versioning = TagVersioning.LATEST;
+            versioning = Versioning.TagVersioning.LATEST;
         }
 
         compatibleSubstituteFor = null;
@@ -105,10 +104,10 @@ public final class DockerImageName {
 
         if (version.startsWith("sha256:")) {
             repo = remoteName;
-            versioning = new Sha256Versioning(version.replace("sha256:", ""));
+            versioning = new Versioning.Sha256Versioning(version.replace("sha256:", ""));
         } else {
             repo = remoteName;
-            versioning = new TagVersioning(version);
+            versioning = new Versioning.TagVersioning(version);
         }
 
         compatibleSubstituteFor = null;
@@ -182,7 +181,7 @@ public final class DockerImageName {
      * @return an immutable copy of this {@link DockerImageName} with the new version tag
      */
     public DockerImageName withTag(final String newTag) {
-        return new DockerImageName(rawName, registry, repo, new TagVersioning(newTag), compatibleSubstituteFor);
+        return new DockerImageName(rawName, registry, repo, new Versioning.TagVersioning(newTag), compatibleSubstituteFor);
     }
 
     /**
@@ -223,7 +222,7 @@ public final class DockerImageName {
         final boolean thisRegistrySame = other.registry.equals(this.registry);
         final boolean thisRepoSame = other.repo.equals(this.repo);
         final boolean thisVersioningNotSpecifiedOrSame = other.versioning == null ||
-            other.versioning.equals(TagVersioning.LATEST) ||
+            other.versioning.equals(Versioning.TagVersioning.LATEST) ||
             other.versioning.equals(this.versioning);
 
         if (thisRegistrySame && thisRepoSame && thisVersioningNotSpecifiedOrSame) {
@@ -256,64 +255,6 @@ public final class DockerImageName {
                     this.rawName, other.rawName, this.rawName, other.rawName
                 )
             );
-        }
-    }
-
-    private interface Versioning {
-        boolean isValid();
-
-        String getSeparator();
-    }
-
-    @Data
-    private static class TagVersioning implements Versioning {
-        public static final String TAG_REGEX = "[\\w][\\w.\\-]{0,127}";
-        private final String tag;
-
-        TagVersioning(String tag) {
-            this.tag = tag;
-        }
-
-        @Override
-        public boolean isValid() {
-            return tag.matches(TAG_REGEX);
-        }
-
-        @Override
-        public String getSeparator() {
-            return ":";
-        }
-
-        @Override
-        public String toString() {
-            return tag;
-        }
-
-        static final TagVersioning LATEST = new TagVersioning("latest");
-    }
-
-    @Data
-    private static class Sha256Versioning implements Versioning {
-        public static final String HASH_REGEX = "[0-9a-fA-F]{32,}";
-        private final String hash;
-
-        Sha256Versioning(String hash) {
-            this.hash = hash;
-        }
-
-        @Override
-        public boolean isValid() {
-            return hash.matches(HASH_REGEX);
-        }
-
-        @Override
-        public String getSeparator() {
-            return "@";
-        }
-
-        @Override
-        public String toString() {
-            return "sha256:" + hash;
         }
     }
 }
