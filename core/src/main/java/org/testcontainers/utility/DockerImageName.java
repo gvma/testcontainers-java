@@ -186,13 +186,6 @@ public final class DockerImageName {
     }
 
     /**
-     * @return an immutable copy of this {@link DockerImageName} without a tag
-     */
-    public DockerImageName withoutTag() {
-        return new DockerImageName(rawName, registry, repo, new TagVersioning("latest"), compatibleSubstituteFor);
-    }
-
-    /**
      * Declare that this {@link DockerImageName} is a compatible substitute for another image - i.e. that this image
      * behaves as the other does, and is compatible with Testcontainers' assumptions about the other image.
      *
