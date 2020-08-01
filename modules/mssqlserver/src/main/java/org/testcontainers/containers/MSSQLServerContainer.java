@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class MSSQLServerContainer<SELF extends MSSQLServerContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
 
     private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("mcr.microsoft.com/mssql/server");
-    private static final String DEFAULT_TAG = "2017-CU12";
+    public static final String DEFAULT_TAG = "2017-CU12";
 
     public static final String NAME = "sqlserver";
 

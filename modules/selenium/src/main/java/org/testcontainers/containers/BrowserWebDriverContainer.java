@@ -68,9 +68,6 @@ public class BrowserWebDriverContainer<SELF extends BrowserWebDriverContainer<SE
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrowserWebDriverContainer.class);
 
-    /**
-     * @deprecated use {@link BrowserWebDriverContainer(DockerImageName)} instead
-     */
     public BrowserWebDriverContainer() {
         super();
         final WaitStrategy logWaitStrategy = new LogMessageWaitStrategy()
@@ -183,9 +180,11 @@ public class BrowserWebDriverContainer<SELF extends BrowserWebDriverContainer<SE
                     .withVncPort(VNC_PORT);
         }
 
+        DockerImageName standardImageForCapabilities = getImageForCapabilities(capabilities, seleniumVersion);
         if (customImageName != null) {
-            DockerImageName standardImageForCapabilities = getImageForCapabilities(capabilities, seleniumVersion);
-            customImageName.assertCompatibleWith(standardImageForCapabilities);
+            customImageName.assertCompatibleWith(standardImageForCapabilities.withoutTag());
+            super.setDockerImageName(customImageName.asCanonicalNameString());
+        } else {
             super.setDockerImageName(standardImageForCapabilities.asCanonicalNameString());
         }
 

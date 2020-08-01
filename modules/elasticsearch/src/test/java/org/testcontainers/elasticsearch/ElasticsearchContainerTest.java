@@ -101,6 +101,7 @@ public class ElasticsearchContainerTest {
                      DockerImageName
                          .parse("docker.elastic.co/elasticsearch/elasticsearch-oss")
                          .withTag(ELASTICSEARCH_VERSION)
+                         .asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch")
                  )
              // }
         ) {
