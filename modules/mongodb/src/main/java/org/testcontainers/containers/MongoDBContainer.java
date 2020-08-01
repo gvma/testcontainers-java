@@ -17,11 +17,11 @@ import java.io.IOException;
 @Slf4j
 public class MongoDBContainer extends GenericContainer<MongoDBContainer> {
 
-    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mongo");
+    private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("mongo");
+    private static final String DEFAULT_TAG = "4.0.10";
     private static final int CONTAINER_EXIT_CODE_OK = 0;
     private static final int MONGODB_INTERNAL_PORT = 27017;
     private static final int AWAIT_INIT_REPLICA_SET_ATTEMPTS = 60;
-    private static final String DEFAULT_VERSION = "4.0.10";
     private static final String MONGODB_DATABASE_NAME_DEFAULT = "test";
 
     /**
@@ -29,7 +29,7 @@ public class MongoDBContainer extends GenericContainer<MongoDBContainer> {
      */
     @Deprecated
     public MongoDBContainer() {
-        this(DOCKER_IMAGE_NAME.withTag(DEFAULT_VERSION));
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
     public MongoDBContainer(@NonNull final String dockerImageName) {
@@ -39,7 +39,7 @@ public class MongoDBContainer extends GenericContainer<MongoDBContainer> {
     public MongoDBContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         withExposedPorts(MONGODB_INTERNAL_PORT);
         withCommand("--replSet", "docker-rs");

@@ -37,7 +37,7 @@ public class ClickHouseContainer extends JdbcDatabaseContainer {
     public ClickHouseContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
+        dockerImageName.assertCompatibleWith(DockerImageName.parse(IMAGE));
 
         withExposedPorts(HTTP_PORT, NATIVE_PORT);
         waitingFor(

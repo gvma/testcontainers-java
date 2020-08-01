@@ -73,7 +73,7 @@ public class DockerImageNameCompatibilityTest {
     @Test
     public void testCheckMethodAcceptsCompatible() {
         DockerImageName subject = DockerImageName.parse("foo").asCompatibleSubstituteFor("bar");
-        subject.checkCompatibleWith(DockerImageName.parse("bar"));
+        subject.assertCompatibleWith(DockerImageName.parse("bar"));
     }
 
     @Test
@@ -82,6 +82,6 @@ public class DockerImageNameCompatibilityTest {
         thrown.expectMessage(containsString("Failed to verify that image 'foo' is a compatible substitute for 'bar'"));
 
         DockerImageName subject = DockerImageName.parse("foo");
-        subject.checkCompatibleWith(DockerImageName.parse("bar"));
+        subject.assertCompatibleWith(DockerImageName.parse("bar"));
     }
 }

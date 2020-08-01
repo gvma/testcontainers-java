@@ -233,12 +233,7 @@ public final class DockerImageName {
             return false;
         }
 
-        final boolean compatibleRegistrySame = other.registry.equals(this.compatibleSubstituteFor.registry);
-        final boolean compatibleRepoSame = other.repo.equals(this.compatibleSubstituteFor.repo);
-        final boolean compatibleVersioningNotSpecifiedOrSame = other.versioning == null ||
-            other.versioning.equals(this.compatibleSubstituteFor.versioning);
-
-        return compatibleRegistrySame && compatibleRepoSame && compatibleVersioningNotSpecifiedOrSame;
+        return this.compatibleSubstituteFor.isCompatibleWith(other);
     }
 
     /**
@@ -247,7 +242,7 @@ public final class DockerImageName {
      *
      * @param other the other image that we are trying to check compatibility with
      */
-    public void checkCompatibleWith(DockerImageName other) {
+    public void assertCompatibleWith(DockerImageName other) {
         if (!this.isCompatibleWith(other)) {
             throw new IllegalStateException(
                 String.format(

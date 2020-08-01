@@ -34,7 +34,7 @@ public class CockroachContainer extends JdbcDatabaseContainer<CockroachContainer
     public CockroachContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
+        dockerImageName.assertCompatibleWith(DockerImageName.parse(IMAGE));
 
         withExposedPorts(REST_API_PORT, DB_PORT);
         waitingFor(

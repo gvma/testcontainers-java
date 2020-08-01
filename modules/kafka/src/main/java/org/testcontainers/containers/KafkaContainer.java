@@ -49,7 +49,7 @@ public class KafkaContainer extends GenericContainer<KafkaContainer> {
     public KafkaContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DockerImageName.parse("confluentinc/cp-kafka"));
+        dockerImageName.assertCompatibleWith(DockerImageName.parse("confluentinc/cp-kafka"));
 
         withExposedPorts(KAFKA_PORT);
 

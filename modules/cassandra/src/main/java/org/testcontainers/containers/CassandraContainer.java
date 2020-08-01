@@ -50,7 +50,7 @@ public class CassandraContainer<SELF extends CassandraContainer<SELF>> extends G
     public CassandraContainer(DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DockerImageName.parse(IMAGE));
+        dockerImageName.assertCompatibleWith(DockerImageName.parse(IMAGE));
 
         addExposedPort(CQL_PORT);
         setStartupAttempts(3);

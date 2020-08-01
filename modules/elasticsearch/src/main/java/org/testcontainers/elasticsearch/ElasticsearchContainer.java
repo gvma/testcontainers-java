@@ -30,19 +30,19 @@ public class ElasticsearchContainer extends GenericContainer<ElasticsearchContai
     /**
      * Elasticsearch Docker base image
      */
-    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch");
+    private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch");
 
     /**
      * Elasticsearch Default version
      */
-    protected static final String ELASTICSEARCH_DEFAULT_VERSION = "6.4.1";
+    protected static final String DEFAULT_TAG = "6.4.1";
 
     /**
      * @deprecated use {@link ElasticsearchContainer(DockerImageName)} instead
      */
     @Deprecated
     public ElasticsearchContainer() {
-        this(DOCKER_IMAGE_NAME.withTag(ELASTICSEARCH_DEFAULT_VERSION));
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
     /**
@@ -60,7 +60,7 @@ public class ElasticsearchContainer extends GenericContainer<ElasticsearchContai
     public ElasticsearchContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         logger().info("Starting an elasticsearch container using [{}]", dockerImageName);
         withNetworkAliases("elasticsearch-" + Base58.randomString(6));

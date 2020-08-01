@@ -39,11 +39,11 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     private static final String HOSTNAME_EXTERNAL_ENV_VAR = "HOSTNAME_EXTERNAL";
     private final List<Service> services = new ArrayList<>();
 
-    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("localstack/localstack");
-    private static final String DEFAULT_VERSION = "0.11.2";
+    private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("localstack/localstack");
+    private static final String DEFAULT_TAG = "0.11.2";
 
     @Deprecated
-    public static final String VERSION = DEFAULT_VERSION;
+    public static final String VERSION = DEFAULT_TAG;
 
     /**
      * Whether or to assume that all APIs run on different ports (when <code>true</code>) or are
@@ -64,7 +64,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
      */
     @Deprecated
     public LocalStackContainer() {
-        this(DOCKER_IMAGE_NAME.withTag(DEFAULT_VERSION));
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
     /**
@@ -89,7 +89,7 @@ public class LocalStackContainer extends GenericContainer<LocalStackContainer> {
     public LocalStackContainer(final DockerImageName dockerImageName, boolean useLegacyMode) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         this.legacyMode = useLegacyMode;
 

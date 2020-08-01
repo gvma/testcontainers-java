@@ -31,7 +31,7 @@ public class Neo4jContainer<S extends Neo4jContainer<S>> extends GenericContaine
     /**
      * The default tag (version) to use.
      */
-    private static final String DEFAULT_VERSION = "3.5.0";
+    private static final String DEFAULT_TAG = "3.5.0";
 
     /**
      * Default port for the binary Bolt protocol.
@@ -65,7 +65,7 @@ public class Neo4jContainer<S extends Neo4jContainer<S>> extends GenericContaine
      */
     @Deprecated
     public Neo4jContainer() {
-        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_VERSION));
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_TAG));
     }
 
     /**
@@ -85,7 +85,7 @@ public class Neo4jContainer<S extends Neo4jContainer<S>> extends GenericContaine
     public Neo4jContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DEFAULT_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         WaitStrategy waitForBolt = new LogMessageWaitStrategy()
             .withRegEx(String.format(".*Bolt enabled on 0\\.0\\.0\\.0:%d\\.\n", DEFAULT_BOLT_PORT));

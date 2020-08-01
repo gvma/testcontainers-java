@@ -35,7 +35,7 @@ public class Db2Container extends JdbcDatabaseContainer<Db2Container> {
     public Db2Container(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DockerImageName.parse(DEFAULT_DB2_IMAGE_NAME));
+        dockerImageName.assertCompatibleWith(DockerImageName.parse(DEFAULT_DB2_IMAGE_NAME));
 
         withPrivilegedMode(true);
         this.waitStrategy = new LogMessageWaitStrategy()

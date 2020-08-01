@@ -11,13 +11,13 @@ import java.util.Set;
  */
 public class MySQLContainer<SELF extends MySQLContainer<SELF>> extends JdbcDatabaseContainer<SELF> {
 
-    private static final DockerImageName DOCKER_IMAGE_NAME = DockerImageName.parse("mysql");
+    private static final DockerImageName DEFAULT_IMAGE_NAME = DockerImageName.parse("mysql");
     private static final String DEFAULT_VERSION = "5.7.22";
 
     public static final String NAME = "mysql";
 
     @Deprecated
-    public static final String IMAGE = DOCKER_IMAGE_NAME.getUnversionedPart();
+    public static final String IMAGE = DEFAULT_IMAGE_NAME.getUnversionedPart();
 
     @Deprecated
     public static final String DEFAULT_TAG = DEFAULT_VERSION;
@@ -38,7 +38,7 @@ public class MySQLContainer<SELF extends MySQLContainer<SELF>> extends JdbcDatab
      */
     @Deprecated
     public MySQLContainer() {
-        this(DOCKER_IMAGE_NAME.withTag(DEFAULT_VERSION));
+        this(DEFAULT_IMAGE_NAME.withTag(DEFAULT_VERSION));
     }
 
     public MySQLContainer(String dockerImageName) {
@@ -48,7 +48,7 @@ public class MySQLContainer<SELF extends MySQLContainer<SELF>> extends JdbcDatab
     public MySQLContainer(final DockerImageName dockerImageName) {
         super(dockerImageName);
 
-        dockerImageName.checkCompatibleWith(DOCKER_IMAGE_NAME);
+        dockerImageName.assertCompatibleWith(DEFAULT_IMAGE_NAME);
 
         addExposedPort(MYSQL_PORT);
     }
