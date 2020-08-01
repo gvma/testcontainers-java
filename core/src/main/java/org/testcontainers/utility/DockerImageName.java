@@ -21,7 +21,6 @@ public final class DockerImageName {
     private final String rawName;
     private final String registry;
     private final String repo;
-    @Nullable
     private final Versioning versioning;
     @Nullable
     private final DockerImageName compatibleSubstituteFor;
@@ -70,7 +69,7 @@ public final class DockerImageName {
             versioning = new TagVersioning(remoteName.split(":")[1]);
         } else {
             repo = remoteName;
-            versioning = null;
+            versioning = TagVersioning.LATEST;
         }
 
         compatibleSubstituteFor = null;
@@ -164,6 +163,7 @@ public final class DockerImageName {
      * @throws IllegalArgumentException if not valid
      */
     public void assertValid() {
+        //noinspection UnstableApiUsage
         HostAndPort.fromString(registry);
         if (!REPO_NAME.matcher(repo).matches()) {
             throw new IllegalArgumentException(repo + " is not a valid Docker image name (in " + rawName + ")");
@@ -189,7 +189,7 @@ public final class DockerImageName {
      * @return an immutable copy of this {@link DockerImageName} without a tag
      */
     public DockerImageName withoutTag() {
-        return new DockerImageName(rawName, registry, repo, null, compatibleSubstituteFor);
+        return new DockerImageName(rawName, registry, repo, new TagVersioning("latest"), compatibleSubstituteFor);
     }
 
     /**
@@ -230,6 +230,7 @@ public final class DockerImageName {
         final boolean thisRegistrySame = other.registry.equals(this.registry);
         final boolean thisRepoSame = other.repo.equals(this.repo);
         final boolean thisVersioningNotSpecifiedOrSame = other.versioning == null ||
+            other.versioning.equals(TagVersioning.LATEST) ||
             other.versioning.equals(this.versioning);
 
         if (thisRegistrySame && thisRepoSame && thisVersioningNotSpecifiedOrSame) {
@@ -294,6 +295,8 @@ public final class DockerImageName {
         public String toString() {
             return tag;
         }
+
+        static final TagVersioning LATEST = new TagVersioning("latest");
     }
 
     @Data
