@@ -219,8 +219,8 @@ public final class DockerImageName {
      * {@link DockerImageName#asCompatibleSubstituteFor(String)} or
      * {@link DockerImageName#asCompatibleSubstituteFor(DockerImageName)}.
      * <p>
-     * If a version tag part is present in the <code>other</code> image name, the tags must exactly match. If a
-     * version part is not present in the <code>other</code> image name, the tag contents are ignored.
+     * If a version tag part is present in the <code>other</code> image name, the tags must exactly match, unless it
+     * is 'latest'. If a version part is not present in the <code>other</code> image name, the tag contents are ignored.
      *
      * @param other the other image that we are trying to test compatibility with
      * @return whether this image has declared compatibility.

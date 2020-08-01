@@ -21,10 +21,10 @@ public class DockerImageNameCompatibilityTest {
         assertFalse("missing compatibility claim", subject.isCompatibleWith(DockerImageName.parse("bar")));
     }
     @Test
-    public void testPlainSeleniumImage() {
+    public void testLatestTreatedAsWildcard() {
         final DockerImageName subject = DockerImageName.parse("foo:4.5.6");
 
-        assertTrue("missing compatibility claim", subject.isCompatibleWith(DockerImageName.parse("foo:1.2.3").withoutTag()));
+        assertTrue("missing compatibility claim", subject.isCompatibleWith(DockerImageName.parse("foo:1.2.3").withTag("latest")));
     }
 
     @Test

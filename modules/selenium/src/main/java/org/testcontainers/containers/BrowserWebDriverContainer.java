@@ -182,7 +182,7 @@ public class BrowserWebDriverContainer<SELF extends BrowserWebDriverContainer<SE
 
         DockerImageName standardImageForCapabilities = getImageForCapabilities(capabilities, seleniumVersion);
         if (customImageName != null) {
-            customImageName.assertCompatibleWith(standardImageForCapabilities.withoutTag());
+            customImageName.assertCompatibleWith(standardImageForCapabilities.withTag("latest"));
             super.setDockerImageName(customImageName.asCanonicalNameString());
         } else {
             super.setDockerImageName(standardImageForCapabilities.asCanonicalNameString());
